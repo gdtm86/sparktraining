@@ -1,9 +1,0 @@
-NASA Apache Log Analysis
-========================
-
-
-In this exercise we will load the aapl
-
-1. Using the following regex pattern, parse all the Apache Logs. Print the Total number of records parsed, number of records parsed successfully and number of records failed to be parsed. Please use the provided helper class ApacheLogParserUtil.scala in your Spark program
-
-val APACHE_ACCESS_LOG_PATTERN_NEW = """^(\S+) (\S+) (\S+) \[([\w:/]+\s[+\-]\d{4})\] "(\S+) (\S+)\s*(\S*)\s*" (\d{3}) (\S+)"""
