@@ -178,7 +178,23 @@ Create an **idfSmallRDD** by applying *inverseDocumentFrequency()* on *smallCorp
 
 To verify if your IDF is correct – run a count() on the smallCorpusRDD, you should see that a total of **4772** unique tokes in the idfSmallRDD 
 
-Collect all the idfs from idfSmallRDD into a variable called **idfSmallWeights** using the collectAsMap() 
+Collect all the idfs from idfSmallRDD into a variable called **idfSmallWeights** using the collectAsMap()
+
+
+Recall that the IDF weight for a token, t, in a set of documents, U, is computed as follows:
+
+* Let N be the total number of documents in U.
+* Find n(t), the number of documents in U that contain t.
+* Then IDF(t) = N/n(t).
+
+The steps your function should perform are:
+
+* Calculate N. Think about how you can calculate N from the input RDD.
+* Create an RDD (not a pair RDD) containing the unique tokens from each document in the input corpus. For each document, you should only include a token once, even if it appears multiple times in that document.
+* For each of the unique tokens, count how many times it appears in the document and then compute the IDF for that token: N/n(t)
+
+Use your idfs to compute the TF-IDF weights for all tokens in smallCorpusRDD (the combined small datasets).
+
 
 #### Verify:
 
@@ -202,7 +218,6 @@ This function will take
 > Returns:
 >> tfidfs: A Map[String,Float] of tokens to TF-IDF values
 
-
 Create a RDD called **tfIDFSmallRDD** that contains the TF-IDFs for all the tokens in the *smallCorpusRDD*
 
 #### Verify
@@ -212,6 +227,33 @@ We can look at the following record 'b000hkgj8k' from amazonSmallTokensRDD
 ```
 tf_idfSmallRDD.filter(record => record._1 == "b000hkgj8k").collect().foreach(println)
 ```
+
+You should see the following result
+
+```
+(autocad, 33.33333333333333),(autodesk: 8.333333333333332),(courseware: 66.66666666666666),(psg: 33.33333333333333),(2007: 3.5087719298245617),(customizing: 16.666666666666664),(interface: 3.0303030303030303)
+```
+
+### Part 4: Entity Resolution as a Text Similarity - Cosine Similarity
+
+Now we are ready to do text comparisons in a formal way. The metric of string distance we will use is called cosine similarity. We will treat each document as a vector in some high dimensional space. Then, to compare two documents we compute the cosine of the angle between their two document vectors. This is much easier than it sounds.
+
+The first question to answer is how do we represent documents as vectors? The answer is familiar: bag-of-words! We treat each unique token as a dimension, and treat token weights as magnitudes in their respective token dimensions. For example, suppose we use simple counts as weights, and we want to interpret the string "Hello, world! Goodbye, world!" as a vector. Then in the "hello" and "goodbye" dimensions the vector has value 1, in the "world" dimension it has value 2, and it is zero in all other dimensions.
+
+The next question is: given two vectors how do we find the cosine of the angle between them? Recall the formula for the dot product of two vectors:
+
+![Dot product of Two vectors](file:///Users/gmedasani/Documents/cloudera/Projects/Intel/Intel-AdvancedAnalytics/sparktraining/exercise-3/images/dot-product.jpg)
+
+We can rearrange terms and solve for the cosine to find it is simply the normalized dot product of the vectors. With our vector model, the dot product and norm computations are simple functions of the bag-of-words document representations, so we now have a formal way to compute similarity.
+
+
+
+Setting aside the algebra, the geometric interpretation is more intuitive. The angle between two document vectors is small if they share many tokens in common, because they are pointing in roughly the same direction. For that case, the cosine of the angle will be large. Otherwise, if the angle is large (and they have few words in common), the cosine is small. Therefore, cosine similarity scales proportionally with our intuitive sense of similarity.
+
+
+
+
+
 
 
 
