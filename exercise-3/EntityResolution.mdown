@@ -242,14 +242,30 @@ The first question to answer is how do we represent documents as vectors? The an
 
 The next question is: given two vectors how do we find the cosine of the angle between them? Recall the formula for the dot product of two vectors:
 
-![Dot product of Two vectors](file:///Users/gmedasani/Documents/cloudera/Projects/Intel/Intel-AdvancedAnalytics/sparktraining/exercise-3/images/dot-product.jpg)
+![Dot product of Two vectors](https://github.com/gdtm86/sparktraining/blob/master/exercise-3/images/dot-product.jpg)
 
 We can rearrange terms and solve for the cosine to find it is simply the normalized dot product of the vectors. With our vector model, the dot product and norm computations are simple functions of the bag-of-words document representations, so we now have a formal way to compute similarity.
 
-
+![Cosine Similarity between two vectors](https://github.com/gdtm86/sparktraining/blob/master/exercise-3/images/cosine-similarity.jpg)
 
 Setting aside the algebra, the geometric interpretation is more intuitive. The angle between two document vectors is small if they share many tokens in common, because they are pointing in roughly the same direction. For that case, the cosine of the angle will be large. Otherwise, if the angle is large (and they have few words in common), the cosine is small. Therefore, cosine similarity scales proportionally with our intuitive sense of similarity.
 
+
+#### Part 4b. Construct a Cartesian Product of all the records in the googleSmallTokenRDD and amazonSmallTokenRDD
+
+```
+val crossSmallRDD = googleSmallTokenRDD.cartesian(amazonSmallTokensRDD)
+```
+
+#### Part 4a. Implement the components of a cosineSimilarity function
+
+Implement the components of a cosineSimilarity function.
+
+The steps you should perform are:
+
+* Define a function dotprod() that takes two tfidf weights of type Map[String, Float] and produces the dot product of them, where the dot product is defined as the sum of the product of values for tokens that appear in both dictionaries
+* Define a function norm() that returns the square root of the dot product of a tfidf weight of type Map[String, Float] and itself
+* Define a function cossim() that returns the dot product of two tfidf weights of type Map[String,float] divided by the norm of the first Map[String,Float] and then by the norm of the second Map[String,Float]
 
 
 
